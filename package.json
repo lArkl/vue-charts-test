@@ -1,0 +1,39 @@
+{
+  "name": "charts",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "bootstrap-loader": "^3.0.2",
+    "chart.js": "^2.7.3",
+    "jquery": "^3.3.1",
+    "popper.js": "^1.14.7",
+    "vue": "^2.5.21",
+    "vue-resource": "^1.5.1",
+    "vue-router": "^3.0.1"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.3.0",
+    "@vue/cli-plugin-eslint": "^3.3.0",
+    "@vue/cli-service": "^3.3.0",
+    "babel-eslint": "^10.0.1",
+    "bootstrap": "^4.2.1",
+    "css-loader": "^2.1.0",
+    "eslint": "^5.8.0",
+    "eslint-plugin-vue": "^5.0.0",
+    "exports-loader": "^0.7.0",
+    "imports-loader": "^0.8.0",
+    "node-sass": "^4.11.0",
+    "postcss-loader": "^3.0.0",
+    "resolve-url-loader": "^3.0.0",
+    "sass-loader": "^7.1.0",
+    "style-loader": "^0.23.1",
+    "url-loader": "^1.1.2",
+    "vue-template-compiler": "^2.5.21"
+  }
+}
