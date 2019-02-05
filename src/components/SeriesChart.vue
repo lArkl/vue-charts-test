@@ -6,8 +6,8 @@
         {{ typeChart }}
       </button>
     </div>
-    <div class="chart-container">
-      <canvas id="planet-chart"></canvas>
+    <div class="container">
+        <canvas id="planet-chart"></canvas>
     </div>
   </div>
 </template>
@@ -30,7 +30,7 @@ export default {
         errored: false,
         loading: false,
         typeCounter: 0,
-        types : ['Line','Bar','Pie'],
+        types : ['Line','Bar'],
         typeChart: '',
         myChart: null,
         chartData: null,
@@ -79,11 +79,15 @@ a {
 #buttons{
   padding: 20px;
 }
-
 .chart-container{
-  position: relative; 
-  height:40vh; 
+  position: relative;
+  height:90vh; 
   width:80vw;
+  margin: auto;
+}
+.mini-chart{
+  position: relative;
+  width:20vw;
   margin: auto;
 }
 </style>

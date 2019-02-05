@@ -2,15 +2,14 @@
   <div class="home">
     <nav class="navbar navbar-dark bg-dark">
       <a class="navbar-brand" href="#">Prueba JSON</a>
+      <div class="container">
       <button
         v-for="tab in tabs"
         v-bind:key="tab"
         v-bind:class="['tab-button', { active: currentTab === tab }]"
         v-on:click="currentTab = tab"
       >{{ tab }}</button>
-        <span class="navbar-text">
-        by Ark
-        </span>
+      </div>
     </nav>
     <component
       v-bind:json="json"
@@ -19,6 +18,9 @@
       @update-json="updateJson"
       class="tab">
     </component>
+    <div class="container">
+      Ⓒ 2019. Designed with <span> ♥ </span> by <a href="https://github.com/lArkl">lArkl</a>
+    </div>
   </div>
 </template>
 
@@ -73,6 +75,7 @@ export default {
   color: rgb(232, 232, 241);
   margin-bottom: -1px;
   margin-right: -1px;
+  margin-left: 20%;
 }
 .tab-button:hover {
   background: #4e5258;

@@ -19,12 +19,12 @@ const createData = (data)=>{
     
     //Asignamos el color para cada dataset
     //var rand = Math.floor(Math.random() * colors.length);
-    let color = 'rgba(' + colors[i+1] + ',.3)';
+    let color = 'rgba(' + colors[i] + ',.3)';
     //let color = new Array(periods.length).fill(colors[i+1]);
     
     //Ingresamos la data previa al dataset
     sets[i] = {
-      label: lbls[i].split('-')[1],
+      label: lbls[i].split('-')[lbls.length-1],
       data: vals,
       backgroundColor: color,
       borderColor: color,
