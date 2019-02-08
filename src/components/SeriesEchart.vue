@@ -6,8 +6,8 @@
         {{ typeChart }}
       </button>
     </div>
-    <div class="chart-container">
-      <canvas id="planet-chart"></canvas>
+    <div class="container">
+        <canvas id="planet-chart"></canvas>
     </div>
   </div>
 </template>
@@ -17,22 +17,23 @@
 import data from '../assets/serie.json'
 // ChartJS
 import Chart from 'chart.js'
-import planetChartData from '../chart-data-json.js'
+import createData from '../chart-data-json.js'
 
 export default {
   name: 'SeriesChart',
   props: {
-    msg: String
+    msg: String,
+    json: Object
   },
   data: function () {
       return {
         errored: false,
         loading: false,
         typeCounter: 0,
-        types : ['Line','Bar','Pie'],
+        types : ['Line','Bar'],
         typeChart: '',
         myChart: null,
-        planetChartData: planetChartData,
+        chartData: null,
       }
   },
   methods: {
@@ -40,7 +41,7 @@ export default {
       this.typeCounter = (this.typeCounter+1) % (this.types.length);
       this.typeChart = this.types[this.typeCounter];
       this.myChart.destroy();
-      this.createChart('planet-chart',this.planetChartData);
+      this.createChart('planet-chart',this.chartData);
     },
     createChart(chartId, chartData) {
       const ctx = document.getElementById(chartId);
@@ -52,8 +53,9 @@ export default {
     }
   },
   mounted(){
+    this.chartData = createData(this.json);
     this.typeChart = this.types[this.typeCounter];
-    this.createChart('planet-chart',this.planetChartData);
+    this.createChart('planet-chart',this.chartData);
   }
 }
 </script>
@@ -77,11 +79,15 @@ a {
 #buttons{
   padding: 20px;
 }
-
 .chart-container{
-  position: relative; 
-  height:40vh; 
+  position: relative;
+  height:90vh; 
   width:80vw;
+  margin: auto;
+}
+.mini-chart{
+  position: relative;
+  width:20vw;
   margin: auto;
 }
 </style>

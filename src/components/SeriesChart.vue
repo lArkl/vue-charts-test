@@ -9,6 +9,14 @@
     <div class="container">
         <canvas id="planet-chart"></canvas>
     </div>
+
+    <div class="container">
+        <canvas id="mini-chart"></canvas>
+    </div>
+
+    <download v-bind:imageBase="image">
+      adasd
+    </download>
   </div>
 </template>
 
@@ -17,10 +25,14 @@
 import data from '../assets/serie.json'
 // ChartJS
 import Chart from 'chart.js'
-import createData from '../chart-data-json.js'
+import { createData,options } from '../chart-data-json.js'
+import download from '@/components/DownloadFile.vue'
 
 export default {
   name: 'SeriesChart',
+  components:{
+    download
+  },
   props: {
     msg: String,
     json: Object
@@ -28,33 +40,67 @@ export default {
   data: function () {
       return {
         errored: false,
-        loading: false,
+        loading: true,
         typeCounter: 0,
         types : ['Line','Bar'],
         typeChart: '',
         myChart: null,
+        miniChart: null,
         chartData: null,
+        options: null,
+        image: '',
       }
   },
   methods: {
     changeChart(){
+      //Mostramos la carga
+      this.loading = true;
+      //document.getElementById("url").src = "";
+      
+      //Cambiamos el grafico
       this.typeCounter = (this.typeCounter+1) % (this.types.length);
       this.typeChart = this.types[this.typeCounter];
       this.myChart.destroy();
+      this.miniChart.destroy();
       this.createChart('planet-chart',this.chartData);
+      this.createMiniChart('mini-chart',this.chartData);
     },
     createChart(chartId, chartData) {
       const ctx = document.getElementById(chartId);
+      this.setImage(chartData);
+      //console.log(chartData.options.animation);
       this.myChart = new Chart(ctx, {
         type: this.typeChart.toLowerCase(),
         data: chartData.data,
         options: chartData.options,
       });
-    }
+    },
+    setImage(chartData){
+      chartData.options.animation = {
+        onComplete: (animation) =>{
+          this.image = this.myChart.toBase64Image();
+          //document.getElementById("url").src = this.image;
+          this.loading = false;
+        }
+      }
+    },
+    createMiniChart(chartId, chartData) {
+      const ctx = document.getElementById(chartId);
+      this.miniChart = new Chart(ctx, {
+        type: this.typeChart.toLowerCase(),
+        data: chartData.data,
+        options: this.options,
+      });
+    },
   },
   mounted(){
+    Chart.defaults.global.animation.duration = 1000;
+    //Chart.defaults.global.elements.rectangle.backgroundColor = 'rgba(244,0,0,0.8)'
     this.chartData = createData(this.json);
+    //Guardamos una copia
+    this.options = options;//JSON.parse(JSON.stringify(options));
     this.typeChart = this.types[this.typeCounter];
+    this.createMiniChart('mini-chart',this.chartData);
     this.createChart('planet-chart',this.chartData);
   }
 }
@@ -85,7 +131,7 @@ a {
   width:80vw;
   margin: auto;
 }
-.mini-chart{
+#mini-chart{
   position: relative;
   width:20vw;
   margin: auto;

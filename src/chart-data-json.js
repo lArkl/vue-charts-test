@@ -28,7 +28,7 @@ const createData = (data)=>{
       data: vals,
       backgroundColor: color,
       borderColor: color,
-      borderWidth: 3
+      borderWidth: 3,
     }
   }
   const chartData = {
@@ -53,4 +53,25 @@ const createData = (data)=>{
   return chartData;
 }
 
-export default createData;
+const options = {
+  responsive: true,
+  aspectRatio: 5,
+  legend:{
+    display: false,
+  },
+  backgroundColor: 'rgba(0,0,0,.3)',
+  lineTension: 1,
+  scales: {
+    yAxes: [{
+      display: false,
+      ticks: {
+        beginAtZero: false,
+        padding: 25,
+      }
+    }]
+  }
+}
+
+//JSON.parse(JSON.stringify(options));
+
+export {createData, options};
