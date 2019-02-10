@@ -1,14 +1,25 @@
 <template>
   <div class="home">
-    <nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="#">Prueba JSON</a>
-      <div class="container">
-      <button
-        v-for="tab in tabs"
-        v-bind:key="tab"
-        v-bind:class="['tab-button', { active: currentTab === tab }]"
-        v-on:click="currentTab = tab"
-      >{{ tab }}</button>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+          <li class="nav-item"
+            v-for="tab in tabs"
+            v-bind:key="tab"
+            v-bind:class="{active: currentTab === tab}"
+          >
+            <a class="nav-link"
+            v-on:click="currentTab = tab">
+              {{ tab }} 
+              <span class="sr-only">(current)
+                </span>
+            </a>
+          </li>
+        </ul>
       </div>
     </nav>
     <component
@@ -29,6 +40,7 @@
 import inicio from '@/components/SeriesBox.vue';
 import chartjs from '@/components/SeriesChart.vue';
 import cargar from '@/components/UploadFile.vue';
+import echarts from '@/components/SeriesEchart.vue';
 
 import data from '../assets/serie.json';
 
@@ -37,13 +49,14 @@ export default {
   components: {
     inicio,
     chartjs,
+    echarts,
     cargar
   },
   data() {
     return {
       fileLoaded: false,
       currentTab: 'Inicio',
-      tabs: ['Inicio','ChartJS','Cargar'],
+      tabs: ['Inicio','ChartJS','Echarts','Cargar'],
       json: null
     }
   },

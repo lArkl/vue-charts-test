@@ -1,13 +1,12 @@
 <template>
-  <div class="download">
-    
+  <span class="download">
     <a id="download" class="btn btn-outline-info btn-sm" 
       download="grafico.png"
       href=""
       @click="onDirSelected">
       Descargar Grafico
     </a>
-  </div>
+  </span>
 </template>
 
 <script>
@@ -26,7 +25,7 @@ export default {
   methods: {
     onDirSelected(ev){
       var image = new Image();
-      console.log(this.imageBase);
+      //console.log(this.imageBase);
       image.src = this.imageBase;
       document.getElementById("download").href = image.src;
     }

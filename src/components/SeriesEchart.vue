@@ -7,7 +7,7 @@
       </button>
     </div>
     <div class="container">
-        <canvas id="planet-chart"></canvas>
+      <div id="main" class="chart-container"></div>
     </div>
   </div>
 </template>
@@ -15,12 +15,16 @@
 <script>
 /* eslint-disable */
 import data from '../assets/serie.json'
-// ChartJS
-import Chart from 'chart.js'
-import createData from '../chart-data-json.js'
+
+import { createEData } from '../chart-data-json.js';
+import download from '@/components/DownloadFile.vue';
+import * as echarts from 'echarts';
 
 export default {
-  name: 'SeriesChart',
+  name: 'SeriesEChart',
+  components:{
+    download
+  },
   props: {
     msg: String,
     json: Object
@@ -28,34 +32,42 @@ export default {
   data: function () {
       return {
         errored: false,
-        loading: false,
+        loading: true,
         typeCounter: 0,
-        types : ['Line','Bar'],
-        typeChart: '',
-        myChart: null,
+        typeChart:'',
         chartData: null,
+        types : ['Line','Bar'],
+        myChart: null,
+        image: '',
       }
   },
   methods: {
     changeChart(){
+      //Mostramos la carga
+      this.loading = true;
+      
+      //Cambiamos el grafico
       this.typeCounter = (this.typeCounter+1) % (this.types.length);
       this.typeChart = this.types[this.typeCounter];
-      this.myChart.destroy();
-      this.createChart('planet-chart',this.chartData);
+      const type = this.chartData.series.map((e)=>{
+        const t = {type: this.typeChart.toLowerCase()};
+        return t;
+      });
+      this.chartData.series = type;
+      this.myChart.setOption(this.chartData);
     },
     createChart(chartId, chartData) {
-      const ctx = document.getElementById(chartId);
-      this.myChart = new Chart(ctx, {
-        type: this.typeChart.toLowerCase(),
-        data: chartData.data,
-        options: chartData.options,
-      });
-    }
+      this.myChart = echarts.init(document.getElementById(chartId))
+      this.myChart.setOption(chartData);
+    },
   },
   mounted(){
-    this.chartData = createData(this.json);
+    //Chart.defaults.global.elements.rectangle.backgroundColor = 'rgba(244,0,0,0.8)'
+    this.chartData = createEData(this.json);
+    //console.log(this.chartData);
+    //Guardamos una copia
     this.typeChart = this.types[this.typeCounter];
-    this.createChart('planet-chart',this.chartData);
+    this.createChart('main',this.chartData);
   }
 }
 </script>
@@ -81,13 +93,8 @@ a {
 }
 .chart-container{
   position: relative;
-  height:90vh; 
-  width:80vw;
-  margin: auto;
-}
-.mini-chart{
-  position: relative;
-  width:20vw;
+  height:70vh; 
+  width:60vw;
   margin: auto;
 }
 </style>

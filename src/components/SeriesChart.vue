@@ -9,13 +9,10 @@
     <div class="container">
         <canvas id="planet-chart"></canvas>
     </div>
-
-    <div class="container">
-        <canvas id="mini-chart"></canvas>
-    </div>
-
+      <button class="btn btn-outline-secondary btn-sm" 
+        v-on:click="resetZoom">Reiniciar</button>
+        &nbsp;&nbsp;&nbsp;
     <download v-bind:imageBase="image">
-      adasd
     </download>
   </div>
 </template>
@@ -25,6 +22,7 @@
 import data from '../assets/serie.json'
 // ChartJS
 import Chart from 'chart.js'
+import zoom from 'chartjs-plugin-zoom';
 import { createData,options } from '../chart-data-json.js'
 import download from '@/components/DownloadFile.vue'
 
@@ -45,7 +43,6 @@ export default {
         types : ['Line','Bar'],
         typeChart: '',
         myChart: null,
-        miniChart: null,
         chartData: null,
         options: null,
         image: '',
@@ -55,15 +52,12 @@ export default {
     changeChart(){
       //Mostramos la carga
       this.loading = true;
-      //document.getElementById("url").src = "";
       
       //Cambiamos el grafico
       this.typeCounter = (this.typeCounter+1) % (this.types.length);
       this.typeChart = this.types[this.typeCounter];
       this.myChart.destroy();
-      this.miniChart.destroy();
       this.createChart('planet-chart',this.chartData);
-      this.createMiniChart('mini-chart',this.chartData);
     },
     createChart(chartId, chartData) {
       const ctx = document.getElementById(chartId);
@@ -84,14 +78,9 @@ export default {
         }
       }
     },
-    createMiniChart(chartId, chartData) {
-      const ctx = document.getElementById(chartId);
-      this.miniChart = new Chart(ctx, {
-        type: this.typeChart.toLowerCase(),
-        data: chartData.data,
-        options: this.options,
-      });
-    },
+    resetZoom(){
+      this.myChart.resetZoom();
+    }
   },
   mounted(){
     Chart.defaults.global.animation.duration = 1000;
@@ -100,7 +89,6 @@ export default {
     //Guardamos una copia
     this.options = options;//JSON.parse(JSON.stringify(options));
     this.typeChart = this.types[this.typeCounter];
-    this.createMiniChart('mini-chart',this.chartData);
     this.createChart('planet-chart',this.chartData);
   }
 }
