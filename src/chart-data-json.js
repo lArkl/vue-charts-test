@@ -57,8 +57,9 @@ const createData = (data)=>{
     //let color = new Array(periods.length).fill(colors[i+1]);
     
     //Ingresamos la data previa al dataset
+    const lb = lbls[i].split('-');
     sets[i] = {
-      label: lbls[i].split('-')[lbls.length-1],
+      label: lb[lb.length-1],
       data: vals,
       backgroundColor: color,
       borderColor: color,
@@ -104,13 +105,6 @@ const createData = (data)=>{
     
         // Drag-to-zoom rectangle style can be customized
         drag: false,
-        /*
-        drag: {
-          borderColor: 'rgba(225,225,225,0.3)',
-          borderWidth: 5,
-          backgroundColor: 'rgb(225,225,225)'
-        },
-        */
         // Zooming directions. Remove the appropriate direction to disable 
         // Eg. 'y' would only allow zooming in the y direction
         mode: 'x',
@@ -130,21 +124,36 @@ const createEData = (data)=>{
     let l = e.name.split('-');
     return l[l.length-1];
   });
-  labels.unshift('');
+  labels.unshift('Periodos');
   const frequency = getFreq(data.periods[0]);
   
   const source = data.periods.map(elem=>{
     const date = moment(elem.name, frequency.format);
     const line = [date.format('YYYY/MM/DD')];
-    elem.values.forEach((e)=>line.push(e));
+    elem.values.forEach((e)=>{
+      line.push(e)
+    });
     return line;
   });
   source.unshift(labels);
-  //console.log(source);
-  const type = new Array(numSeries).fill({type: 'line'});
+  
+  //Rellenamos el tipo y colores
+  const series = new Array(numSeries);
+  for(let i=0;i<numSeries;i++){
+    series[i] = {
+      type: 'line',
+      color: 'rgba('+colors[i]+',.5)',  
+    }
+  }
+
   const option = {
     legend: {},
-    tooltip: {},
+    tooltip: {
+      trigger: 'axis',
+      position: function (pt) {
+          return [pt[0], '10%'];
+      }
+    },
     toolbox: {
       feature: {
           dataZoom: {
@@ -175,42 +184,88 @@ const createEData = (data)=>{
     // Declare X axis, which is a category axis, mapping
     // to the first column by default.
     xAxis: {
-      type: 'time',
-      /*
-      axisLabel: {
-        formatter: asd,
-      },
-      */
+      type: 'category',
+      boundaryGap: false,
     },
     // Declare Y axis, which is a value axis.
     yAxis: {
+      type: 'value',
+      //min: 0,
     },
     // Declare several series, each of them mapped to a
     // column of the dataset by default.
-    series: type
+    series: series,
   }
   return option;
 }
 
-const options = {
-  responsive: true,
-  aspectRatio: 5,
-  legend:{
-    display: false,
-  },
-  //backgroundColor: 'rgba(0,0,0,.3)',
-  lineTension: 1,
-  scales: {
-    yAxes: [{
-      //display: false,
-      ticks: {
-        beginAtZero: false,
-        padding: 25,
-      }
-    }]
+const createMap = (data)=>{
+  const title = data.config.title.split('-');
+  const labels = data.config.series.map(e=>{
+    const name = e.name.split('-');
+    return name[name.length-1].substr(1);//.split(' ')[1];
+  });
+  const dataset = []
+  for(let i=0;i<labels.length;++i){
+    let val = data.periods[0].values[i];//parseFloat(data.periods[0].values[i]);
+    let name = labels[i];
+    dataset.push({name: name, value: val});
   }
+
+  const option = {
+    title: {
+      text: title[0],
+      subtext: title[1],
+      //sublink: 'http://esa.un.org/wpp/Excel-Data/population.htm',
+      left: 'center',
+      top: 'top'
+    },
+    tooltip: {
+      trigger: 'item',
+      formatter: function (params) {
+        var value = (params.value + '').split('.');
+        value = value[0].replace(/(\d{1,3})(?=(?:\d{3})+(?!\d))/g, '$1,')
+                + '.' + value[1];
+        return params.seriesName + '<br/>' + params.name + ' : ' + value;
+      }
+    },
+    toolbox: {
+      show: true,
+      orient: 'vertical',
+      left: 'right',
+      top: 'center',
+      feature: {
+        dataView: {readOnly: false},
+        restore: {},
+        saveAsImage: {}
+      }
+    },
+    visualMap: {
+      min: 0,
+      max: 1000000,
+      text:['High','Low'],
+      realtime: false,
+      calculable: true,
+      inRange: {
+          color: ['lightskyblue','yellow', 'orangered']
+      }
+    },
+    series: [
+      {
+        name: title[0],
+        type: 'map',
+        mapType: 'world',
+        roam: true,
+        itemStyle:{
+            emphasis:{label:{show:true}}
+        },
+        data: dataset,
+      }
+    ]
+  };
+  return option;
 }
 
 //JSON.parse(JSON.stringify(options));
 
-export {createData, options, createEData};
+export {createData, createEData, createMap};

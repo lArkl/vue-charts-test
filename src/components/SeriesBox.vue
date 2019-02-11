@@ -16,7 +16,7 @@
           <tr>
             <th>Periodo</th>
             <th v-for="serie in json.config.series" :key="serie.id"> 
-              {{ serie.name.split("-")[1] }} 
+              {{ serie.name.split("-")[serie.name.split("-").length-1] }} 
             </th>
           </tr>
         </thead>
@@ -35,7 +35,6 @@
 </template>
 
 <script>
-import data from '../assets/serie.json'
 //console.log(data)
 /*
 import axios from 'axios'

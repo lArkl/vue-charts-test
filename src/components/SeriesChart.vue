@@ -19,11 +19,10 @@
 
 <script>
 /* eslint-disable */
-import data from '../assets/serie.json'
 // ChartJS
 import Chart from 'chart.js'
 import zoom from 'chartjs-plugin-zoom';
-import { createData,options } from '../chart-data-json.js'
+import { createData } from '../chart-data-json.js'
 import download from '@/components/DownloadFile.vue'
 
 export default {
@@ -44,7 +43,6 @@ export default {
         typeChart: '',
         myChart: null,
         chartData: null,
-        options: null,
         image: '',
       }
   },
@@ -87,7 +85,6 @@ export default {
     //Chart.defaults.global.elements.rectangle.backgroundColor = 'rgba(244,0,0,0.8)'
     this.chartData = createData(this.json);
     //Guardamos una copia
-    this.options = options;//JSON.parse(JSON.stringify(options));
     this.typeChart = this.types[this.typeCounter];
     this.createChart('planet-chart',this.chartData);
   }

@@ -41,6 +41,7 @@ import inicio from '@/components/SeriesBox.vue';
 import chartjs from '@/components/SeriesChart.vue';
 import cargar from '@/components/UploadFile.vue';
 import echarts from '@/components/SeriesEchart.vue';
+import mapa from '@/components/SeriesMap.vue';
 
 import data from '../assets/serie.json';
 
@@ -50,13 +51,14 @@ export default {
     inicio,
     chartjs,
     echarts,
-    cargar
+    cargar,
+    mapa
   },
   data() {
     return {
       fileLoaded: false,
       currentTab: 'Inicio',
-      tabs: ['Inicio','ChartJS','Echarts','Cargar'],
+      tabs: ['Inicio','ChartJS','Echarts','Cargar','Mapa'],
       json: null
     }
   },
