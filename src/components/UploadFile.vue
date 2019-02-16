@@ -37,9 +37,19 @@ export default {
     onFileSelected(ev){
       var reader = new FileReader();
       reader.onload = function(e) {
+        const archive = this.getExtension(ev);
         let data = reader.result;
-        let file = JSON.parse(data);
-        let title = file.config.title;
+        
+        let file = null;
+        let title = '';
+
+if(archive.ext ==='json'){
+          file = JSON.parse(data);
+        }else{ 
+          // Es un csv
+          file = this.processData(data,archive.title);
+        }
+        title = file.config.title;
         if(title!==''){
           //console.log('Objeto File',file);
           this.$emit('update-json',file);
@@ -47,6 +57,37 @@ export default {
         //console.log(this.title);
       }.bind(this);
       reader.readAsText(ev.target.files[0]);
+    },
+    getExtension(ev){
+      const path = ev.srcElement.value.split('\\');
+      const title = path[path.length-1].split('.')[0]; 
+      const ext = path[path.length-1].split('.')[1];
+      return {'title': title, 'ext': ext};
+    },
+    processData(allText,title){
+      const allTextLines = allText.split(/[\r\n]+/);
+      const sep = ';'
+      const headers = allTextLines[0].split(sep);
+
+      const output = {'config':{'title':title}}
+      const series = headers.map(e=>{
+        return {"name": e};
+      });
+      series.shift();
+      const periods = [];
+      for(let i=1; i<allTextLines.length; ++i) {
+        const data = allTextLines[i].split(sep);
+        const values = []
+        if (data.length == headers.length){
+          for (let j=1; j<headers.length; ++j) {
+            values.push(data[j]);
+          }
+        }
+        periods.push({name: data[0], values: values});
+      }
+      output.config.series = series;
+      output.periods = periods;
+      return output;
     }
   }
 }
